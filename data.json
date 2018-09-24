@@ -1,0 +1,15 @@
+{
+    "setup":{
+        "Pixiv-Username":"",
+        "Pixiv-Password":""
+    },
+    "Item":[
+        {
+            "WebhookURL":"",
+            "Users":[
+            ]
+        }
+        
+    ]
+        
+}
