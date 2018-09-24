@@ -29,7 +29,7 @@ except ImportError:
     Exit()
 import os
 import json
-
+import datetime
 strmd = u"\u0042\u004f\u0054\u0020\u006d\u0061\u0064\u0065\u0020\u0062\u0079\u0020\u79d1\u6280\u72fc\u0028\u0054\u0065\u0063\u0068\u0020\u0077\u006f\u006c\u0066\u0029"
 artdata = dict()
 
@@ -74,12 +74,13 @@ def Run():
             try:
                 arts = pixiv.user(user).works()
                 Userinfo = pixiv.user(user).User()
-                if artdata[user] == arts.id:
+                if artdata[user] == arts[0]['id']:
                     continue
-            except KeyError:
-                continue
-            except Exception:
-                continue
+            except KeyError :
+                pass
+            except Exception as e :
+                if not str(e) == "'list' object has no attribute 'id'":
+                    continue
             artdata[user] = arts[0].id
             for art in arts:
                 embed = Webhook(lists['WebhookURL'], color=123123)
@@ -101,13 +102,14 @@ def Run():
     np.save('artdata.npy', artdata)
 
 
-Recordlast()
-
 scheduler = BlockingScheduler()
 
 try:
-      # 偵測計時器部分 請勿調整過快 過快會對pixiv伺服器造成負擔
+    Run()
+    Recordlast()
+    # 偵測計時器部分 請勿調整過快 過快會對pixiv伺服器造成負擔
     scheduler.add_job(Run, 'interval', hours=0.5)
+    
     print('Press Ctrl+{0} to exit'.format('Break' if os.name == 'nt' else 'C'))
     scheduler.start()
 except (KeyboardInterrupt, SystemExit):
