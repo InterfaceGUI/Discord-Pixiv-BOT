@@ -12,7 +12,7 @@ except ImportError:
     from apscheduler.schedulers.blocking import BlockingScheduler
 
 try:
-    from pixiv import login
+    from Pixiv import login
 except ImportError:
     print('pixiv-ImportError')
     Exit()
@@ -44,6 +44,7 @@ with open("data.json", "r") as reader:
 # imgurl = arts.image.replace('https://i.pximg.net/','https://i.pixiv.cat/')
 
 # Pixiv 登入
+
 pixiv = login(data['setup']['Pixiv-Username'], data['setup']['Pixiv-Password'])
 
 
@@ -105,8 +106,8 @@ def Run():
 scheduler = BlockingScheduler()
 
 try:
-    Run()
     Recordlast()
+    Run()
     # 偵測計時器部分 請勿調整過快 過快會對pixiv伺服器造成負擔
     scheduler.add_job(Run, 'interval', hours=0.5)
     
