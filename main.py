@@ -3,7 +3,7 @@ def Exit():
     while True:
         pass
 
-
+import time
 try:
     from apscheduler.schedulers.blocking import BlockingScheduler
 except ImportError:
@@ -47,6 +47,7 @@ with open("data.json", "r") as reader:
 
 pixiv = login(data['setup']['Pixiv-Username'], data['setup']['Pixiv-Password'])
 
+a = pixiv.following()
 
 def UrlReplace(Url):
     return Url.replace('https://i.pximg.net/', 'https://i.pixiv.cat/')
@@ -69,21 +70,24 @@ def Recordlast():
 
 
 def Run():
+    time.sleep(5)
+    print('偵測')
     artdata = np.load('artdata.npy').item()
     for lists in data['Item']:
         for user in lists['Users']:
             try:
                 arts = pixiv.user(user).works()
                 Userinfo = pixiv.user(user).User()
-                if artdata[user] == arts[0]['id']:
-                    continue
-            except KeyError :
-                pass
             except Exception as e :
-                if not str(e) == "'list' object has no attribute 'id'":
-                    continue
-            artdata[user] = arts[0].id
+                continue
+            
             for art in arts:
+                try:
+                    if artdata[user] == art.id:
+                        break
+                except Exception :
+                    pass
+                
                 embed = Webhook(lists['WebhookURL'], color=123123)
                 embed.set_author(name=Userinfo['name'], url='https://www.pixiv.net/member.php?id=' + user, icon=UrlReplace(
                     Userinfo['profile_image_urls']['px_50x50']))
@@ -100,6 +104,8 @@ def Run():
                 embed.set_footer(
                     text=strmd, icon="https://i.imgur.com/UNPFf1f.jpg", ts=True)
                 embed.post()
+
+            artdata[user] = arts[0].id
     np.save('artdata.npy', artdata)
 
 
@@ -107,11 +113,14 @@ scheduler = BlockingScheduler()
 
 try:
     Recordlast()
-    Run()
+    
     # 偵測計時器部分 請勿調整過快 過快會對pixiv伺服器造成負擔
-    scheduler.add_job(Run, 'interval', hours=0.5)
     
     print('Press Ctrl+{0} to exit'.format('Break' if os.name == 'nt' else 'C'))
-    scheduler.start()
+    while True:
+        Run()
+        time.sleep(600)
+
+
 except (KeyboardInterrupt, SystemExit):
     pass
