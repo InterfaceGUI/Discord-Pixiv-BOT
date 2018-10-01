@@ -44,10 +44,12 @@ with open("data.json", "r") as reader:
 # imgurl = arts.image.replace('https://i.pximg.net/','https://i.pixiv.cat/')
 
 # Pixiv 登入
-
 pixiv = login(data['setup']['Pixiv-Username'], data['setup']['Pixiv-Password'])
+def loginPixiv():
+    global pixiv
+    pixiv = login(data['setup']['Pixiv-Username'], data['setup']['Pixiv-Password'])
 
-a = pixiv.following()
+#a = pixiv.following()
 
 def UrlReplace(Url):
     return Url.replace('https://i.pximg.net/', 'https://i.pixiv.cat/')
@@ -79,6 +81,7 @@ def Run():
                 arts = pixiv.user(user).works()
                 Userinfo = pixiv.user(user).User()
             except Exception as e :
+                Recordlast()
                 continue
             
             for art in arts:
@@ -112,6 +115,7 @@ def Run():
 scheduler = BlockingScheduler()
 
 try:
+    loginPixiv()
     Recordlast()
     
     # 偵測計時器部分 請勿調整過快 過快會對pixiv伺服器造成負擔
