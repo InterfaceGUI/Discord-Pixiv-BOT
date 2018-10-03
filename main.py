@@ -2,17 +2,17 @@ def Exit():
     print('按下Ctrl-C 退出程序')
     while True:
         pass
-
+from pip._internal import main
 import time
 try:
     from apscheduler.schedulers.blocking import BlockingScheduler
 except ImportError:
     import pip
-    pip.main(['install', 'apscheduler'])
+    main(['install', 'apscheduler'])
     from apscheduler.schedulers.blocking import BlockingScheduler
-
+from Pixiv import login
 try:
-    from Pixiv import login
+    pass
 except ImportError:
     print('pixiv-ImportError')
     Exit()
@@ -64,8 +64,10 @@ def Recordlast():
             try:
                 a = pixiv.user(user).User()
                 artsID = pixiv.user(user).works()[0].id
-
+                Userinfo = pixiv.user(user).User()
+                print(Userinfo['name'])
             except Exception as e:
+                print(user)
                 continue
             artdata[user] = artsID
     np.save('artdata.npy', artdata)
@@ -81,7 +83,7 @@ def Run():
                 arts = pixiv.user(user).works()
                 Userinfo = pixiv.user(user).User()
             except Exception as e :
-                Recordlast()
+                loginPixiv()
                 continue
             
             for art in arts:
@@ -120,7 +122,7 @@ try:
     
     # 偵測計時器部分 請勿調整過快 過快會對pixiv伺服器造成負擔
     
-    print('Press Ctrl+{0} to exit'.format('Break' if os.name == 'nt' else 'C'))
+    print('Press Ctrl+c to exit')
     while True:
         Run()
         time.sleep(600)
