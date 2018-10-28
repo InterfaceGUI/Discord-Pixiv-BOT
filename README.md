@@ -6,4 +6,7 @@
 [![PyPI - Python Version](https://img.shields.io/badge/Python-3.6-blue.svg)](https://www.python.org/downloads/)
 
 
-## 目前還在測試中
+## 已可使用
+
+未來更新上 launcher
+
