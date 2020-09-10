@@ -1,4 +1,6 @@
+
 # Discord-Pixiv-BOT
+## No longer update!
 一個同步Pixiv圖片的DiscordBOT
  
 [![GitHub issues](https://img.shields.io/github/issues/InterfaceGUI/Discord-Pixiv-BOT.svg)](https://github.com/InterfaceGUI/Discord-Pixiv-BOT/issues)
